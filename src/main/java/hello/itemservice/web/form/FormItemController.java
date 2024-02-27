@@ -32,7 +32,14 @@ public class FormItemController {
     }
 
     @GetMapping("/add")
-    public String addForm() {
+    public String addForm(Model model) {
+        model.addAttribute("item", new Item());
+        /*
+        th:object를 적용하려면 먼저 해당 오브젝트 정보를 넘겨주어야 한다. 등록 폼이기 때문에 데이터가
+        비어있는 빈 오브젝트를 만들어서 뷰에 전달하자.
+
+        타임리프가 지원하는 폼 기능을 사용하려면 먼저 모델로 비어있는 Item객체라도 넘겨줘야 한다.
+        */
         return "form/addForm";
     }
 
