@@ -1,0 +1,77 @@
+package test;
+/*
+ * 모든 열거형의 조상은 java.lang.Enum이며, 이 클래스는 다음과 같은 메서드들을 제공한다.
+ * 1. Class<E> getDeclaringClass() : 열거형의 Class객체를 반환한다.
+ * 2. String name() : 열거형 상수의 이름을 문자열로 반환한다.
+ * 3. int ordinal() : 열거형 상수가 정의된 순서를 반환한다.(0부터 시작이다.)
+ * 4. T valueOf(Class<T> enumType, String name) : 지정된 열거형에서 name과 일치하는 열거형 상수를 반환한다.
+ *
+ * 그리고
+ * static E[] values()와 static E[] valueOf(String name)가 있다.
+ * values()는 열거형에 정의된 모든 상수를 출력할때 사용한다.
+ * valueOf(String name)은 열거형 상수의 이름으로 문자열 상수에 대한 참조값을 얻을 수 있게 해준다.
+ * */
+
+/* chapter 12 (20)열거형 예제 */
+enum Direction{
+	EAST, SOUTH, WEST, NORTH
+}
+
+public class Test1 {
+	public static void main(String[] args) {
+		Direction d1 = Direction.EAST;
+		Direction d2 = Direction.valueOf("WEST");
+		Direction d3 = Enum.valueOf(Direction.class, "EAST");
+
+//		Direction에는 열거형 상수가 들어가 있고 그것(상수)를 출력
+		System.out.println("d1=" + d1);
+		System.out.println("d2=" + d2);
+		System.out.println("d3=" + d3);
+
+//		열거형 상수는 ==으로 비교 가능하다. *열거형 상수 자체를 비교(상수명을 비교)*
+		System.out.println("d1==d2 ? " + (d1==d2));
+		System.out.println("d1==d3 ? " + (d1==d3));
+//		열거형 상수는 equals로도 당연히 비교 가능하다.
+		System.out.println("d1.equals(d3) ? " + (d1.equals(d3)));
+
+
+//		열거형 상수는 작다(<) 크다(>)로는 비교가 불가능 하다. *열거형 상수 값을 비교*
+//		System.out.println("d1 > d3 ? " + (d1>d3)); // 에러
+//		대신에 열거형은 compareTo()로 비교하면 된다. 같으면0, 왼쪽이 크면 양수, 오른쪽이 크면 음수
+		System.out.println("d1.compareTo(d3) ? " + d1.compareTo(d3));
+		System.out.println("d1.compareTo(d2) ? " + d1.compareTo(d2));
+
+//		이제 switch문을 써보자 열거형 상수 d1이 들어간다.
+		switch(d1) {
+			case EAST:  // Direction.EAST 라고 쓸 수 없다.
+				System.out.println("Direction is EAST.");
+				break;
+			case WEST:
+				System.out.println("Direction is WEST.");
+				break;
+			case NORTH:
+				System.out.println("Direction is NORTH.");
+				break;
+			case SOUTH:
+				System.out.println("Direction is SOUTH.");
+				break;
+			default:
+				System.out.println("Invalid Direction.");
+				break;
+		}
+
+//		이번에는 내가 정의한 enum클래스(Direction)에서 모든 상수를 배열형태로 바꾸고,
+//		그 배열 안에 있는 값(Direction의 상수(명))를 출력해 보자
+		Direction[] dArr = Direction.values();
+		for(Direction d : dArr) { // for(Direction d : Direction.values())
+//			d.name() : 상수의 이름을 출력한다.
+//			d.ordinal() : 열거형 상수가 정의된 순서를 반환한다.
+			System.out.printf("%s=%d%n", d.name(), d.ordinal());
+		}
+
+	}
+}
+
+
+
+

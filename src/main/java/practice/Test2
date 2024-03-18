@@ -1,0 +1,94 @@
+package test;
+import java.lang.*;
+import java.util.*;
+
+/*
+열거형을 Direction2라는 이름으로 하나 선언했다. 그리고 열거형 안의 상수로 EAST, SOUTH, WEST, NORTH가 있고,
+EAST에는 상수(이름)에 대한 값으로 1, ">"이 들어가고 SOUTH에는 상수(이름)에 대한 값으로 2, "V"가 들어가고
+WEST에는 상수(이름)에 대한 값으로 3, "<"이 들어가고 NORTH에는 상수(이름)에 대한 값으로 4, "^"가 들어간다
+사용자(개발자)가 Direction2.EAST처럼 상수를 하나 꺼내고 그 상수의 값을 꺼내고 싶을 수 있다. 때문에 인스턴스변수
+value, symbol을 선언하고, 그에 대한 생성자를 선언하고, 그에 대한 getter을 선언했다. 인스턴스변수와 생성자와
+getter을 선언을 해주면 사용자(개발자)가 EAST.getValue()와 같이 enum클래스 내부에 선언되어 있는 상수에 대한
+값을 호출할때 enum클래스는 내부적으로 enum클래스 안에 선언된 인스턴스변수에 상수(이름)에 대한 값이 담기도록 구성되어
+있기 때문에 사용자는 EAST.getValue()해서 EAST상수에 대한 값을 꺼내서 쓸 수 있다. 현재의 예시에서는 상수에대한
+값을 2개를 선언했기 때문에 2개의 인스턴스변수, 2개를 초기화 할 수 있는 생성자, 2개의 getter을 선언했다
+참고로 상수에 대한 값을 설정하려면 상수 옆에 값을 써주면 된다 ex:) EAST(6), EAST(1, ">")
+*/
+
+enum Direction2 {
+	EAST(1, ">"), SOUTH(2, "V"), WEST(3, "<"), NORTH(4, "^");
+	/*
+	enum클래스명+values(); 이렇게 하면 enum클래스 안에 있는 상수들이 배열의 형태로 담기게 된다.
+	이때 상수들을 받을수 있는 데이터타입은 enum클래스명이고 배열안에 담겨 있는 상수들은 enum클래스에서
+	제공하는 메서드들을 사용할수 있다. ex:) EAST.name(), EAST.ordinal()
+	*/
+	private static final Direction2[] DIR_ARR = Direction2.values();
+	private final int value;
+	private final String symbol;
+
+	Direction2(int value, String symbol){
+		this.value = value;
+		this.symbol = symbol;
+	}
+
+	public int getValue() {
+		return value;
+	}
+	public String getSymbol() {
+		return symbol;
+	}
+
+	public static Direction2 of(int dir) {
+		if(dir<1 || dir>4) {
+			throw new IllegalArgumentException("Invalid value :" + dir);
+		}
+		return DIR_ARR[dir-1];
+	}
+
+	// 방향을 회전시키는 메서드. num의 값만큼 90도씩 시계방향으로 회전한다.
+	public Direction2 rotation(int num) {
+		num = num%4;
+		if(num < 0) num += 4; // num이 음수일 때는 시계반대 방향으로 회전
+//		Direction2.EAST와 같이 enum클래스에서 상수를 뽑으면 value에 상수(이름)에 해당하는 값이 value에 담기게 되고
+//		그 value를 -1한 다음에 num을 더하고 % 4로 계산하면 된다.
+		return DIR_ARR[(value-1+num) % 4];
+	}
+	/*
+	 enum클래스의 상수를 뽑음으로서 name와 상수(이름)에 해당하는 값이 symbol에 채워지는데 Direction2.EAST.toString()와
+	 같이 이름을 뽑은다음에 toString()메서드를 호출하면 초기화 되어 있는 name와 symbol을 출력하도록 코드를 구현했다.
+	 */
+	public String toString() {
+		return name()+getSymbol();
+	}
+}
+
+public class Test2 {
+	public static void main(String[] args) {
+//		각각의 상수들이 배열의 형태로 담기는데, 그 상수들의 데이터타입은 enum클래스명이다.
+		for(Direction2 d : Direction2.values()) {
+//			상수명과 상수명에 해당하는 value를 뽑자
+			System.out.printf("%s=%d%n", d.name(), d.getValue());
+//			EAST는 1, SOUTH는 2, WEST는 3, NORTH는 4이다.
+		}
+		// EAST상수를 하나 뽑아서 넣자
+		Direction2 d1 = Direction2.EAST;
+		// 1은 EAST이기 때문에 EAST상수 하나가 뽑아서 넣어진다.
+		Direction2 d2 = Direction2.of(1);
+
+		System.out.printf("d1=%s, %d%n", d1.name(), d1.getValue());
+		System.out.printf("d2=%s, %d%n", d2.name(), d2.getValue());
+
+		// 회전하는 코드
+		/*
+		Direction2라는 enum클래스에서 EAST상수를 꺼냄으로서 enum클래스(Direction2)안에 있는 value는 EAST에서 첫번째 상수 값으로
+		설정한 1이 들어가고 enum클래스(Direction2)내부에 정의해 놓은 rotation에 의해서 90도씩 회전한 상수가 출력되는데, 이때 상수의
+		데이터타입은 Direction2이고 Direction2에 toString()을 오버라이딩 해 놓았다. 즉 rotation의 인자로 들어간
+		각도(1이 90도이고, 2가 180도이고 3이 270도이고, 4가 360도이고, -1이 -90도이고, -2가 -180도이고, -3이 -270도이고, -4가 -360도이다)
+		만큼 움직인 상수의 toString이 호출되어서 출력이 된다.
+		*/
+		System.out.println(Direction2.EAST.rotation(1));
+		System.out.println(Direction2.EAST.rotation(2));
+		System.out.println(Direction2.EAST.rotation(-1));
+		System.out.println(Direction2.EAST.rotation(-2));
+	}
+}
