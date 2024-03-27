@@ -49,6 +49,18 @@
         </div>
     </div>
 
+    <!-- multi checkbox -->
+    <div>
+        <div>등록 지역</div>
+        <div th:each="region : ${regions}" class="form-check form-check-inline">
+        <!-- 바로 위의 regions는 메서드레벨에 있는 @ModelAttribute에 의해서 모델에 담겨 있었고 그것을 쓰는 것이다. -->
+            <input type="checkbox" th:field="${item.regions}" th:value="${region.key}" class="form-check-input" disabled>
+        <!-- 바로 위의 item.regions는 컨트롤러 안의 매핑 메서드 내에서 DB로부터 item을 꺼내온 후 모델에 item을 담은 것이다.
+             그리고 그 item의 regions을 th:field의 값으로 넣은 것이다. -->
+            <label th:for="${#ids.prev('regions')}" th:text="${region.value}" class="form-check-label">서울</label>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col">
             <button class="w-100 btn btn-primary btn-lg"
